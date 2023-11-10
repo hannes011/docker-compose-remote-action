@@ -45,7 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: astappiev/docker-compose-remote-action@master
+    - uses: 5eqn/docker-compose-remote-action@master
       name: Docker-Compose Remote Deployment
       with:
         ssh_host: example.com

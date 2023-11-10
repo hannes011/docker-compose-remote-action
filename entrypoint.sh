@@ -44,13 +44,15 @@ fi
 if [ -z "$DOCKER_USE_STACK" ]; then
   DOCKER_USE_STACK=false
 else
-  if [ -z "$DOCKER_COMPOSE_PREFIX" ]; then
-    echo "Input docker_compose_prefix is required!"
-    exit 1
-  fi
+  if $DOCKER_USE_STACK; then
+    if [ -z "$DOCKER_COMPOSE_PREFIX" ]; then
+      echo "Input docker_compose_prefix is required!"
+      exit 1
+    fi
 
-  if [ -z "$DOCKER_ARGS" ]; then
-    DOCKER_ARGS=""
+    if [ -z "$DOCKER_ARGS" ]; then
+      DOCKER_ARGS=""
+    fi
   fi
 fi
 
@@ -80,7 +82,7 @@ cleanup() {
 trap cleanup EXIT
 
 log "Packing workspace into archive to transfer onto remote machine"
-tar cjvf /tmp/workspace.tar.bz2 $DOCKER_COMPOSE_FILENAME
+tar cjvf /tmp/workspace.tar.bz2 $DOCKER_COMPOSE_FILENAME $WORKSPACE_FILES
 
 log "Registering SSH keys"
 mkdir -p "$HOME/.ssh"
