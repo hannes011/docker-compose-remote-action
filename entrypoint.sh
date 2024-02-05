@@ -99,7 +99,10 @@ if [ -n "$SSH_JUMP_HOST" ]; then
   printf '%s %s\n' "$SSH_JUMP_HOST" "$SSH_JUMP_PUBLIC_KEY" >> /etc/ssh/ssh_known_hosts
 fi
 
-remote_path="\$HOME/$WORKSPACE"
+if [[ $WORKSPACE != /* ]]; then
+  WORKSPACE="\$HOME/$WORKSPACE"
+fi
+remote_path="$WORKSPACE"
 remote_cleanup=""
 remote_registry_login=""
 docker_prefix="docker-compose -f \"$DOCKER_COMPOSE_FILENAME\""
@@ -108,7 +111,7 @@ if [ -n "$DOCKER_COMPOSE_PREFIX" ]; then
   remote_docker_exec="$docker_prefix pull && $docker_prefix -p \"$DOCKER_COMPOSE_PREFIX\" up $DOCKER_ARGS"
 fi
 if $DOCKER_USE_STACK ; then
-  remote_path="\$HOME/$WORKSPACE/$DOCKER_COMPOSE_PREFIX"
+  remote_path="$WORKSPACE/$DOCKER_COMPOSE_PREFIX"
   remote_docker_exec="docker stack deploy -c \"$DOCKER_COMPOSE_FILENAME\" --prune \"$DOCKER_COMPOSE_PREFIX\" $DOCKER_ARGS"
 fi
 if ! $WORKSPACE_KEEP ; then
